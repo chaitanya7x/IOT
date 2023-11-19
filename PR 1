@@ -1,0 +1,53 @@
+// C++ code
+//
+
+#include <Servo.h>
+Servo myservo;
+const int trigPin = 4;
+const int echopin = 2;
+
+void setup()
+{
+  Serial.begin(9600);
+  myservo.attach(9);
+}
+
+void loop()
+{
+  long duration, cm;
+  pinMode(13, OUTPUT);
+  pinMode(trigPin, OUTPUT);
+  
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(20);
+  digitalWrite(trigPin, LOW);
+  
+  pinMode(echopin, INPUT);
+  
+  duration = pulseIn(echopin, HIGH);
+  cm = microsecondsToCentimeters(duration);
+  if( cm < 100 )
+  {
+  	digitalWrite(13, HIGH);
+    myservo.write(90);
+    delay(10);
+  }
+  else
+  {
+  	digitalWrite(13,LOW);
+    myservo.write(0);
+    delay(10);
+  }
+     
+  Serial.print(cm);
+  Serial.print("cm");
+  Serial.println();
+  delay(50);
+  }
+     
+  long microsecondsToCentimeters(long microseconds)
+  {
+  	return microseconds / 29 / 2;
+  }
